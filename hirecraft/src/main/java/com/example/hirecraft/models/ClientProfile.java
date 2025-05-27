@@ -25,6 +25,4 @@ public class ClientProfile {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-//    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-//    private List<JobPosting> jobPostings = new ArrayList<>();
 }

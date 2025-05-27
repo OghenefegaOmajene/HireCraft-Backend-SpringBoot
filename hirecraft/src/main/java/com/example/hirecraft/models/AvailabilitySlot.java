@@ -30,8 +30,6 @@ public class AvailabilitySlot {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    private boolean isRecurring = true;
-
     private boolean isBooked = false;
 
 }

@@ -24,11 +24,6 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-
     /**
      * List all users. Only admins with MANAGE_USERS permission can access.
      */

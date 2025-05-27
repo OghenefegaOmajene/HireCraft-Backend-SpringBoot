@@ -17,7 +17,7 @@
 //import com.example.hirecraft.repository.PasswordResetTokenRepository;
 //import com.example.hirecraft.repository.RoleRepository;
 //import com.example.hirecraft.repository.UserRepository;
-//import com.example.hirecraft.security.jwt.JwtTokenProvider;
+////import com.example.hirecraft.security.jwt.JwtTokenProvider;
 //import com.example.hirecraft.services.AuthService;
 //import com.example.hirecraft.utils.PasswordUtil;
 //import lombok.RequiredArgsConstructor;
@@ -88,14 +88,14 @@
 //                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
 //        );
 //
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        String token = jwtTokenProvider.generateToken(authentication);
-//
-//        return LoginResponse.builder()
-//                .accessToken(token)
-//                .tokenType("Bearer")
-//                .expiresIn(jwtTokenProvider.getValidityInMilliseconds())
-//                .build();
+////        SecurityContextHolder.getContext().setAuthentication(authentication);
+////        String token = jwtTokenProvider.generateToken(authentication);
+////
+////        return LoginResponse.builder()
+////                .accessToken(token)
+////                .tokenType("Bearer")
+////                .expiresIn(jwtTokenProvider.getValidityInMilliseconds())
+////                .build();
 //    }
 //
 //    @Override

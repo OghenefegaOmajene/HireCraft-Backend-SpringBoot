@@ -1,6 +1,8 @@
 package com.example.hirecraft.models;
 
 import java.time.LocalDateTime;
+
+import com.example.hirecraft.enums.DocumentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -35,13 +37,4 @@ public class ServiceProviderDocument {
     private LocalDateTime uploadDate;
 
     private boolean verified = false; // Admin-verified status
-
-    public enum DocumentType {
-        CV,
-        LICENSE,
-        CERTIFICATION,
-        PORTFOLIO_IMAGE,
-        INSURANCE,
-        OTHER
-    }
 }

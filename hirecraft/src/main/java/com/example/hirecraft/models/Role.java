@@ -1,7 +1,7 @@
 package com.example.hirecraft.models;
 
 import com.example.hirecraft.enums.PermissionName;
-import com.example.hirecraft.enums.RoleName;
+import com.example.hirecraft.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +25,7 @@ public class Role {
     //    Role name r.g ADMIN, USER
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private RoleName name;
+    private UserRole name;
 
 
 //    private String description;
