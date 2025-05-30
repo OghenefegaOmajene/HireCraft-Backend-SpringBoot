@@ -76,11 +76,15 @@ public class User {
         LocalDateTime now = LocalDateTime.now();
         createdAt = now;
         updatedAt = now;
-        if (status == null) status = UserStatus.ACTIVE;
+        if (status == null) status = UserStatus.NOT_VERIFIED;
     }
 
     @PreUpdate
     void preUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void setCvUrl(String url) {
+
     }
 }

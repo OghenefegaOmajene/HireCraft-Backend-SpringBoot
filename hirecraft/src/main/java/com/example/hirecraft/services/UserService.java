@@ -1,22 +1,22 @@
 package com.example.hirecraft.services;
 
-import com.example.hirecraft.dtos.requests.ProfilePatchRequest;
-import com.example.hirecraft.dtos.requests.UserUpdateRequest;
-import com.example.hirecraft.dtos.response.UserDetailResponse;
-import com.example.hirecraft.dtos.response.UserListResponse;
-import org.springframework.web.multipart.MultipartFile;
+import com.example.hirecraft.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
-
-    List<UserListResponse> getAllUsers();
-    UserDetailResponse getUserById(Long id);
-    UserDetailResponse updateUser(Long id, UserUpdateRequest request);
-
+    User createUser(User user);
+    Optional<User> getUserById(Long id);
+    Optional<User> getUserByEmail(String email);
+    Page<User> getAllUsers(Pageable pageable);
+    User updateUser(Long id, User userDetails);
     void deleteUser(Long id);
-    UserDetailResponse getUserByEmail(String email);
-    UserDetailResponse updateUserProfile(String email, ProfilePatchRequest request);
-    String updateProfilePicture(String email, MultipartFile file);
+    boolean existsByEmail(String email);
+//    if (user.getCompletedJobs() >= 50 && user.getCvUrl() != null) {
+//        user.setVerified(true);
+//        userRepository.save(user);
+//    }
 
 }

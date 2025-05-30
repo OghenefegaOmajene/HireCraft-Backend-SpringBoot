@@ -1,104 +1,63 @@
 package com.example.hirecraft.controllers;
 
-import com.example.hirecraft.dtos.requests.ProfilePatchRequest;
-import com.example.hirecraft.dtos.requests.UserUpdateRequest;
-import com.example.hirecraft.dtos.response.UserDetailResponse;
-import com.example.hirecraft.dtos.response.UserListResponse;
+import com.example.hirecraft.models.User;
 import com.example.hirecraft.services.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    /**
-     * List all users. Only admins with MANAGE_USERS permission can access.
-     */
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping
-    @PreAuthorize("hasAuthority('MANAGE_USERS')")
-    public ResponseEntity<List<UserListResponse>> getAllUsers() {
-        List<UserListResponse> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Page<User>> getAllUsers(Pageable pageable) {
+        return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
-    /**
-     * Get user details by ID. Requires VIEW_USER_PROFILE permission.
-     * @param id user identifier
-     * @return detailed user information
-     */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('VIEW_USER_PROFILE')")
-    public ResponseEntity<UserDetailResponse> getUserById(@PathVariable Long id) {
-        UserDetailResponse user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Update an existing user's profile. Requires EDIT_USER_PROFILE permission.
-     * @param id user identifier
-     * @param request payload containing updated fields
-     * @return updated user information
-     */
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('EDIT_USER_PROFILE')")
-    public ResponseEntity<UserDetailResponse> updateUser(
-            @PathVariable Long id,
-            @Valid @RequestBody UserUpdateRequest request) {
-        UserDetailResponse updated = userService.updateUser(id, request);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        return ResponseEntity.ok(userService.updateUser(id, userDetails));
     }
 
-    /**
-     * Delete a user account. Requires DELETE_USER_ACCOUNT permission.
-     * @param id user identifier
-     * @return no content on successful deletion
-     */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('DELETE_USER_ACCOUNT')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()")               // ①
-    public ResponseEntity<UserDetailResponse> getMyProfile(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        UserDetailResponse profile = userService.getUserByEmail(userDetails.getUsername());
-        return ResponseEntity.ok(profile);
+    @PostMapping("/upload-cv")
+    public ResponseEntity<String> uploadCv(@RequestParam("file") MultipartFile file, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+
+        if (!file.getContentType().equals("application/pdf")) {
+            return ResponseEntity.badRequest().body("Only PDF files are allowed.");
+        }
+
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), Map.of("resource_type", "raw"));
+        String url = uploadResult.get("url").toString();
+
+        user.setCvUrl(url);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("CV uploaded successfully.");
     }
 
-
-    @PatchMapping("/profile")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDetailResponse> updateMyProfile(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody ProfilePatchRequest request) {
-        UserDetailResponse updated = userService.updateUserProfile(
-                userDetails.getUsername(), request);
-        return ResponseEntity.ok(updated);
-    }
-
-    @PatchMapping("/profile-picture")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String,String>> uploadProfilePicture(
-            @AuthenticationPrincipal UserDetails principal,
-            @RequestPart("file") MultipartFile file) {
-
-        String url = userService.updateProfilePicture(principal.getUsername(), file);
-        return ResponseEntity.ok(Map.of("profilePictureUrl", url));
-    }
 }

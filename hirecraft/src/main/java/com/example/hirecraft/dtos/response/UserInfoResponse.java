@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
-        private String accessToken;
-        private String refreshToken;
-        private Long expiresIn;
-        private String tokenType;
-        private UserInfoResponse user;
+public class UserInfoResponse {
+    private Long id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String role;
 }

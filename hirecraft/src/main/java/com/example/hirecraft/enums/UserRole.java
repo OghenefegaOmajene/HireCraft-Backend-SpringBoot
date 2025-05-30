@@ -1,14 +1,14 @@
 package com.example.hirecraft.enums;
 
 public enum UserRole {
-    ROLE_CLIENT,
-    ROLE_SERVICE_PROVIDER,
-    ROLE_ADMIN;
+    CLIENT,
+    SERVICE_PROVIDER,
+    ADMIN;
 
-    // Optional: If you need to remove the "ROLE_" prefix
-    public String getSimpleName() {
-        return this.name().replace("ROLE_", "");
-    }
+//     Optional: If you need to remove the "ROLE_" prefix
+//    public String getSimpleName() {
+//        return this.name().replace("ROLE_", "");
+//    }
 }
 
 

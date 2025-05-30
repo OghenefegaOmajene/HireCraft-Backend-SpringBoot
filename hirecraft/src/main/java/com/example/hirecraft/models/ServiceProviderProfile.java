@@ -38,7 +38,4 @@ public class ServiceProviderProfile {
 
     @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
     private List<ServiceProviderDocument> documents = new ArrayList<>();
-
-    @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
-    private List<AvailabilitySlot> availability = new ArrayList<>();
 }
